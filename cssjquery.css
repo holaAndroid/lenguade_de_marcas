@@ -1,0 +1,14 @@
+.textoError{
+    color:red;
+}
+.textoEnvio{
+    font-size:3em;
+    color:red;
+}
+.textoOK{
+    color:#0C0;
+}
+#btn_Enviar{
+    position:relative;
+    left:12%;
+}

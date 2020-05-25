@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C/DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtm11/DTD/xhtm11-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Formulario de ejemplo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="cssjquery.css" rel="stylesheet" type="text/css"/>
+		<style>
+		.textoError{
+		color:red;
+		}
+		.textoEnvio{
+		font-size:3em;
+		color:red;
+		}
+		.textoOK{
+		color:#0C0;
+		}
+		#btn_Enviar{
+		position:relative;
+		left:12%;
+		}
+		</style>
+    </head>
+    <body onload="limpiarformulario">
+        <form action="index.html" method="post" onsubmit="return validarformulario()">
+            <table>
+                <tr>
+                    <td>*Nombre:</td>
+                    <td>
+                        <input type="text" id="nombre" name="nombre" onblur="validarCampoTexto()">
+                        <span id="mensaje_nombre" class="textoError"</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>*Dni:</td>
+                    <td>
+                    <input type="text" id="dni" name="dni" onblur="validardni()"> <span id="mensaje_dni" class="textoError"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Fecha de nacimiento(dd/mm/aaaa):</td>
+                    <td><input type="text" id="fecha" name="fecha" onblur="validarfecha()"><span id="mensaje_fecha" class="textoError"></span></td>
+                </tr>
+                <tr>
+                    <td>Número de teléfono:</td>
+                    <td><input type="text" id="telefono" name="telefono" onblur="validartelefono()"><span id="mensaje_telefono" class="textoError"></span></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="text" id="correo" name="correo" onblur="validaremail()"><span id="mensaje_correo" class="textoError"></span></td>
+                </tr>
+                <tr>
+                    <td>*Ocupación:</td>
+                    <td><select id="opciones" name="ocupacion" onblur="validarocupacion()">
+                            <option value="">- Seleccione una ocupación - </option>
+                            <option value="1">Empleado</option>
+                            <option value="2">Desempleado</option>
+                            <option value="3">Estudiante</option>
+                        </select> <span id="mensaje_opciones" class="textoError"></span>
+                    </td>
+                </tr>
+            </table>
+            <span class="textoError"><br/>(*) Campos obligatorios<br/><br/></span>
+            <input type="submit" id="btn_Enviar" value="Enviar">
+        </form>
+        
+            <script type="text/javascript" src="jquery-3.4.1.js"></script>
+            <script>
+    function validarCampoTexto() 
+            {
+                
+             var abecedario="abcdefghijklmnñopqrstuvwxyzáéíóú";
+             nombre=document.getElementById("nombre").value;
+             
+             if(nombre==null||nombre.length==0||/^\s+$/.test(nombre))
+             {
+                 
+                 $("#mensaje_nombre").removeClass("textoOK");
+                 $("#mensaje_nombre").addClass("textoError");
+                 $("#mensaje_nombre").html ('Debe rellenar este campo.');
+                 return false;
+             }else{
+                nombre=nombre.toLowerCase();
+                for(var i=0;i<nombre.length;i++){
+                    if(abecedario.indexOf(nombre.charAt(i),0)==-1)
+                    {
+                    $("#mensaje_nombre").removeClass("textoOK");
+                    $("#mensaje_nombre").addClass("textoError");
+                    $("#mensaje_nombre").html('valor no válido.Solamente puede introducir texto.');
+                       return false;  
+                   }              
+               }
+              $("#mensaje_nombre").removeClass("textoError");
+              $("#mensaje_nombre").addClass("textoOK");
+              $("#mensaje_nombre").html('Campo relleno correctamente.');
+              return true;
+            }
+        }
+
+    
+    function error(x){
+                     alert("aviso de alerta");
+                     return true;
+            }
+        
+                   
+            function validarformulario() 
+                   {
+                       if(((validarCampoTexto()==false)&& (validardni()==false)&&(Validarocupacion()==false))||(validarCampoTexto()==false)||(validardni()==false)||(validarfecha()==false)||(validartelefono()==false)||(validaremail()==false)||(validarocupacion()==false)){
+                           return false;
+                       }
+                       else{
+                           alert("Formulario enviado con éxito.");
+                           return true;
+                       }
+                    }
+       
+    function limpiarformulario()
+            {
+              $('input[type="text"]').val('');
+              $('select').val(0);
+                
+             }
+             
+
+    function validardni(){
+        dni=document.getElementById("dni").value;
+        var letrasdni=['T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'];
+        dni=dni.toUpperCase();
+        if(dni==null||dni.length==0||/^\s+$/.test(dni)){
+            $("#mensaje_dni").html('Debe rellenar este campo.');
+            return false;
+        }
+         else{
+             if(!(/^\d{8}[A-z]$/.test(dni)))  
+             {
+               $("#mensaje_dni").removeClass("textoOK");
+               $("#mensaje_dni").addClass("textoError");
+               $("#mensaje_dni").html('Formato de D.N.I. no válido.Recuerde:(XXXXXXXXLETRA).');
+               return false;
+             }
+             if(dni.charAt(8)!=letrasdni[dni.substring(0,8)%23]){
+             $("#mensaje_dni").removeClass("textoOK");
+             $("#mensaje_dni").addClass("textoError");
+             $("#mensaje_dni").html('La letra del D.N.I. no es correcta.');
+             return false;
+             }
+             $("#mensaje_dni").removeClass("textoError");
+             $("#mensaje_dni").addClass("textoOK");
+             $("#mensaje_dni").html('Campo rellenado correctamente.');
+             return true;
+        }
+    }
+      
+    function validarfecha(){
+                fecha=document.getElementById("fecha").value;
+                longitudfecha=fecha.length;
+                posBarraUno=fecha.indexOf("/");
+                posBarraDos=fecha.lastIndexOf("/");
+                dia=fecha.substring(0,posBarraUno);
+                mes=fecha.substring(posBarraUno+1,posBarraDos);
+                anyo=fecha.substring(posBarraDos+1,longitudfecha);
+                
+                dia=parseInt(dia);
+                mes=parseInt(mes);
+                anyo=parseInt(anyo);
+               if(longitudfecha==0){
+                    return true;   
+            }
+            else{
+                if(!(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(fecha))) {
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('La fecha introducida no tiene un formato válido.');
+                    return false;
+                }
+                else{
+                if((dia<0)||(dia>31)) {
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El dia introducido no es válido.');
+                    return false;   
+                }
+                if((mes<0)||(mes>12)) {
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El mes introducido no es válido');
+                    return false;   
+                }
+                else if((mes==4)||(mes==6)||(mes==9)|| (mes==11)) {
+                    if(dia>30){
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El dia introducido no es válido');
+                    return false;   
+                }
+            }
+     else if(mes==2) {
+         if(bisiesto(anyo)==true){
+             if(dia>29){
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El día introducido no es válido.');
+                    return false;
+                 }
+             }
+         else{
+             if(dia>28){
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El dia introducido no es válido.');
+                    return false;
+                }
+            }          
+        }
+        if((anyo<1913)||(anyo>1995)){
+                    $("#mensaje_fecha").removeClass("textoOK");
+                    $("#mensaje_fecha").addClass("textoError");
+                    $("#mensaje_fecha").html('El año introducido no es válido.');
+                    return false;
+                 }
+                    $("#mensaje_fecha").removeClass("textoError");
+                    $("#mensaje_fecha").addClass("textoOK");
+                    $("#mensaje_fecha").html('Campo rellenado correctamente.');
+                    return true;
+                 }
+             }
+         }
+                   function bisiesto(anyo){
+                       if(((anyo%4)==0)&&(((anyo%100) !=0)||((anyo%400)==0))){
+                           return true;
+                       }
+                       else{
+                           return false;
+                       }
+                       
+                   }
+                   
+                   function validartelefono(){
+                       telefono=document.getElementById("telefono").value;
+                       if(telefono.length==0){
+                           return true;
+                       }
+                       else{
+                           if(!(/^\d{9}$/.test(telefono))){
+                               $("#mensaje_telefono").removeClass("textoOK");
+                               $("#mensaje_telefono").addClass("textoError");
+                               $("#mensaje_telefono").html('El telefono introducido no es válido.Recuerde su formato: (XXXXXXXXX).');
+                               return false;
+                           }
+                               $("#mensaje_telefono").removeClass("textoError");
+                               $("#mensaje_telefono").addClass("textoOK");
+                               $("#mensaje_telefono").html('Campo rellenado correctamente.');
+                               return true;
+                       }
+                   }
+                    
+                   function validaremail(){
+                       email=document.getElementById("correo").value;
+                       if(email.length==0){
+                           return true;
+                       }
+                       else{
+                           if(!(/[\w-\.]{3,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/.test(email))){
+                               $("#mensaje_correo").html('El email introducido no es válido.Recuerde su formato:(nombre+@+servidor+dominio).');
+                               return false;
+                           }
+                               $("#mensaje_correo").removeClass("textoError");
+                               $("#mensaje_correo").addClass("textoOK");
+                               $("#mensaje_correo").html('Campo rellenado correctamente.');
+                               return true;
+                            }
+                        }
+                            
+                    function validarocupacion(){
+                       opcion=document.getElementById("opciones").selectedIndex;
+                       if(opcion==null ||opcion==0){
+                               $("#mensaje_opciones").removeClass("textoOK");
+                               $("#mensaje_opciones").addClass("textoError");
+                               $("#mensaje_opciones").html('Debe seleccionar una ocupación.');
+                               return false;
+                       }
+                               $("#mensaje_opciones").removeClass("textoError");
+                               $("#mensaje_opciones").addClass("textoOK");
+                               $("#mensaje_opciones").html('Campo seleccionado correctamente');
+                               return true;
+                            }
+                   
+    </script>
+    </body>
+</html>
